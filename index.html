@@ -2041,7 +2041,7 @@
   <div class="full-div"></div>
 
   <!-- REKENING -->
-<!--
+  <!--
 <section id="rekening">
   <div class="section reveal">
     <div class="sec-label">Hadiah Pernikahan</div>
@@ -2090,7 +2090,7 @@
   </div>
 </section>
 -->
-   
+
 
   <div class="full-div"></div>
 
@@ -2143,7 +2143,7 @@
     <div class="music-info" id="music-info">♪ Bermuara</div>
     <button class="music-btn" id="music-btn" onclick="toggleMusic()">♪</button>
   </div>
-  <audio id="bg-music" autoplay loop>
+  <audio id="bg-music" autoplay loop muted playsinline>
     <source src="musik.mp3" type="audio/mpeg">
   </audio>
 
@@ -2430,22 +2430,31 @@ _Dikirim melalui undangan digital Nilam & Akbar_ 💛`;
       setTimeout(() => window.open(`https://wa.me/${WA}?text=${encodeURIComponent(text)}`, '_blank'), 400);
     }
 
+
+
     /* ══════════════════════════════
        MUSIC
     ══════════════════════════════ */
-    let playing = false;
     const audio = document.getElementById('bg-music');
-    function toggleMusic() {
-      const btn = document.getElementById('music-btn');
-      const info = document.getElementById('music-info');
-      if (playing) { audio.pause(); btn.classList.remove('playing'); btn.textContent = '♪'; info.classList.remove('show'); playing = false; }
-      else { audio.play().catch(() => { }); btn.classList.add('playing'); btn.textContent = '♫'; info.classList.add('show'); playing = true; }
-    }
-    setTimeout(() => {
-      const info = document.getElementById('music-info');
-      info.classList.add('show');
-      setTimeout(() => { if (!playing) info.classList.remove('show'); }, 4500);
-    }, 3500);
+
+    window.addEventListener('load', async () => {
+      try {
+
+        // paksa play
+        await audio.play();
+
+        // unmute setelah autoplay berhasil
+        setTimeout(() => {
+          audio.muted = false;
+          audio.volume = 1;
+        }, 500);
+
+      } catch (err) {
+        console.log('Autoplay gagal:', err);
+      }
+    });
+
+
   </script>
 </body>
 
