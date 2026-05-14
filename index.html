@@ -2143,9 +2143,9 @@
     <div class="music-info" id="music-info">♪ Bermuara</div>
     <button class="music-btn" id="music-btn" onclick="toggleMusic()">♪</button>
   </div>
-  <audio id="bg-music" autoplay loop muted playsinline>
-    <source src="musik.mp3" type="audio/mpeg">
-  </audio>
+  <audio id="bg-music" loop autoplay muted playsinline>
+  <source src="musik.mp3" type="audio/mpeg">
+</audio>
 
   <div id="toast"></div>
 
@@ -2433,24 +2433,90 @@ _Dikirim melalui undangan digital Nilam & Akbar_ 💛`;
 
 
     /* ══════════════════════════════
-       MUSIC
-    ══════════════════════════════ */
-    const audio = document.getElementById('bg-music');
+    MUSIC
+ ══════════════════════════════ */
+    let playing = false;
 
+    const audio = document.getElementById('bg-music');
+    const btn = document.getElementById('music-btn');
+    const info = document.getElementById('music-info');
+
+    /* setting autoplay */
+    audio.autoplay = true;
+    audio.loop = true;
+    audio.muted = true;
+    audio.playsInline = true;
+
+    /* tombol music */
+    function toggleMusic() {
+
+      if (playing) {
+
+        audio.pause();
+
+        btn.classList.remove('playing');
+        btn.textContent = '♪';
+
+        info.classList.remove('show');
+
+        playing = false;
+
+      } else {
+
+        audio.muted = false;
+
+        audio.play().then(() => {
+
+          btn.classList.add('playing');
+          btn.textContent = '♫';
+
+          info.classList.add('show');
+
+          playing = true;
+
+        }).catch(err => {
+          console.log('Music gagal diputar:', err);
+        });
+      }
+    }
+
+    /* autoplay saat website dibuka */
     window.addEventListener('load', async () => {
+
       try {
 
-        // paksa play
+        /* play dalam keadaan muted */
         await audio.play();
 
-        // unmute setelah autoplay berhasil
+        /* tampilkan info */
+        info.classList.add('show');
+
+        /* unmute setelah sedikit delay */
         setTimeout(() => {
+
           audio.muted = false;
           audio.volume = 1;
-        }, 500);
+
+          btn.classList.add('playing');
+          btn.textContent = '♫';
+
+          playing = true;
+
+        }, 800);
+
+        /* hide info */
+        setTimeout(() => {
+
+          if (playing) {
+            info.classList.remove('show');
+          }
+
+        }, 5000);
 
       } catch (err) {
-        console.log('Autoplay gagal:', err);
+
+        console.log('Autoplay diblokir browser:', err);
+
       }
     });
 
